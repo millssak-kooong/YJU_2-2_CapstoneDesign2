@@ -145,16 +145,21 @@ if (!isset($_SESSION['login']['id'])) {
         */
 
         # 7. 페이지네이션
-        $self = basename($_SERVER['PHP_SELF']);
+        $self = basename($_SERVER['PHP_SELF']); // 현재 스크립트 파일명 (예: home.php)
+        // $_SERVER['PHP_SELF']: 현재 실행 중인 스크립트의 경로(문서 루트 기준).
+        // basename(): 경로에서 파일명만 추출.
         $first = 1;
         $last = $total_page;
         $before = max($first, $page_now - 1);
         $next = min($last, $page_now + 1); // 둘 중 가장 작은 값을 돌려줌 → 값에 상한을 줌 → 끝 페이지 보장
 
         // 현재 페이지 기준 5 개 페이지 계산
+        // start: page-2를 기본으로 하되, 최소 1, 최대 last-4로 제한
+        // end: start+4를 기본으로 하되, last를 넘지 않게 제한
         $start = max($first, min($page_now - 2, $last - 4)); // 하한+상한을 동시에 적용 → 범위 고정
-        $end = min($last, $start + 4);
+        $end = min($last, $start + 4); // 총 페이지가 5보다 적어도 있는 만큼만 보임
 
+        // <nav>: HTML5의 시맨틱 태그로, 내비게이션(이동 링크 묶음)을 감싸는 용도
         echo "<nav style='margin-top:10px'>";
         echo "<a href='$self?page_now=$first'>&laquo; </a>"; // <<
         echo "<a href='$self?page_now=$before'>&lsaquo; </a>"; // <
