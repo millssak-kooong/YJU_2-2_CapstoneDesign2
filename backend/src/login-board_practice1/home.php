@@ -100,11 +100,18 @@ if (!isset($_SESSION['login']['id'])) {
     $result_inquiry = $db->query($sql_inquiry);
 
     # 6. 화면 출력
-    if ($total_post === 0) {
+
+    // XSS 방지 이스케이프 처리 헬퍼(반복 조치용) - $e: 콜백 함수 변수, fn: 익명 함수, $s: 매개 변수
+    $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8');
+
+    if ($total_post === 0 || $result_inquiry === false) { // 게시된 글이 없을 때, 쿼리 실패 처리
         echo '<p>게시된 글이 없습니다.</p>';
     } else {
 
         // 표로 간단 출력
+        // <tr>: table row. 표의 가로 한 줄
+        // <th>: table header cell. 헤더(제목) 칸
+        // <td>: table data cell. 일반 데이터 칸
         echo '<table border="1" cellpadding="4" cellspacing="0">';
         echo '<tr>
                 <th>제목</th>
@@ -112,12 +119,15 @@ if (!isset($_SESSION['login']['id'])) {
                 <th>조회수</th>
                 <th>작성 일시</th>
               </tr>';
+
+        // DB 결과 집합(객체)에서 행을 한 줄씩 연관배열로 꺼냄
         while ($row = $result_inquiry->fetch_assoc()) {
-            $num = (int)$row['num'];
-            $name = $row['name'];
-            $title = $row['title'];
+            // null 병합 연산은 생략. 빈 값 검사를 이미 하고 글 저장되기 때문.
+            $num = (int)$row['num']; // 정수 캐스팅
+            $name = $e($row['name']); // 문자열 캐스팅
+            $title = $e($row['title']);
             $view = (int)$row['view'];
-            $created_at = $row['created_at'];
+            $created_at = $e($row['created_at']);
             echo "<tr>
                     <td><a href='view.php?num=$num'>$title</a></td>
                     <td>$name</td>
