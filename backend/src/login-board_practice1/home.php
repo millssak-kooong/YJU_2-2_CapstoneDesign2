@@ -101,15 +101,17 @@ if (!isset($_SESSION['login']['id'])) {
 
     
     # 4. 현재 페이지 표시(최신순) 글 조회
-    $offset = ($page_now - 1) * $post_per_page; // offset 설정
+    $offset = (int)(($page_now - 1) * $post_per_page); // offset 설정
 
-    $sql_inquiry = "SELECT num, name, title, view, created_at
-                    from post
-                    order by num desc
-                    limit $post_per_page offset $offset";
-                // LIMIT <최대 반환 행 수> OFFSET <건너 뛸 행 수>
+    if ($total_post > 0) { // 게시글 없을 때는 sql문 통과
+        $sql_inquiry = "SELECT num, name, title, view, created_at
+                        from post
+                        order by num desc
+                        limit $post_per_page offset $offset";
+                    // LIMIT <최대 반환 행 수> OFFSET <건너 뛸 행 수>
 
     $result_inquiry = $db->query($sql_inquiry);
+    }
 
 
     # 5. 화면 출력
@@ -117,8 +119,10 @@ if (!isset($_SESSION['login']['id'])) {
     // XSS 방지 이스케이프 처리 헬퍼(반복 조치용) - $e: 콜백 함수 변수, fn: 익명 함수, $s: 매개 변수
     $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8');
 
-    if ($total_post === 0 || $result_inquiry === false) { // 게시된 글이 없을 때, 쿼리 실패 처리
+    if ($total_post === 0) { // 게시된 글이 없을 때
         echo '<p>게시된 글이 없습니다.</p>';
+    } elseif ($result_inquiry === false) { // 쿼리 실패 처리
+        echo '<p style="color:red">글 조회 중 오류가 발생했습니다.</p>';
     } else {
 
         // 표로 간단 출력
@@ -148,6 +152,13 @@ if (!isset($_SESSION['login']['id'])) {
                     <td>$created_at</td>
                   </tr>";
         }
+
+        // 메모리 해제
+        $result_inquiry->free();
+        /*  결과셋(mysqli_result)은 사용이 끝날 때마다 free() 해주는 게 좋음.
+            행이 0개여도 성공이면 결과 객체가 생기므로 free() 권장.
+            실패(false)거나 INSERT/UPDATE/DELETE 결과(true/false)에는 free()를 호출하면 안 됨.
+        */
         echo '</table>';
 
 
@@ -208,10 +219,7 @@ if (!isset($_SESSION['login']['id'])) {
         echo '</nav>';
     }
 
-    # 7. 자원 정리
-    if ($result_inquiry instanceof mysqli_result) {
-        $result_inquiry->free();
-    }
+    # 7. DB 자원 정리
     $db->close();
     ?>
 </body>
