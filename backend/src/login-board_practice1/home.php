@@ -36,24 +36,29 @@ if (!isset($_SESSION['login']['id'])) {
     }
     ?>
 
-    <P><strong><?= $_SESSION['login']['name'] ?></strong> 회원님 접속 중.</p>
-    
-    <?php
-    // 글 등록 성공 알림
-    if (isset($_SESSION['write']['success'])) {
-        echo "<p style='color:darkgreen'>" . htmlspecialchars($_SESSION['write']['success']) . "</p>";
-        unset($_SESSION['write']['success']); // 플래시 메시지 패턴
-    }
-    ?>
-    
-    <a href="logout.php">로그 아웃</a>
+    <P><strong><?= $_SESSION['login']['name'] ?></strong> 회원님 접속 중.</p>    
+    <button type="button" onclick="location.href='logout.php'">로그 아웃</button>
     <hr>
     <h3>목록</h3>
     <button type="button" onclick="location.href='write.php'">글 쓰기</button>
 
 
 
-    <?php # 게시글 목록 (페이지네이션)
+    <?php
+    // 글 등록 성공 알림
+    if (isset($_SESSION['write']['success'])) {
+        echo "<p style='color:darkgreen'>" . htmlspecialchars($_SESSION['write']['success']) . "</p>";
+        unset($_SESSION['write']['success']); // 플래시 메시지 패턴
+    }
+
+    // 게시글 접근 에러 알림 (조회 쿼리 실패 시, 글이 없을 때)
+    if (isset($_SESSION['post']['error'])) {
+        echo "<p style='color:red'>" . htmlspecialchars($_SESSION['post']['error']) . "</p>";
+        unset($_SESSION['post']['error']);
+    }
+
+
+    # ---------- 게시글 목록 (페이지네이션) ----------
     
     # 1. DB 접속 정보 불러오기 및 연결
     require_once __DIR__ . '/db_conf.php';
