@@ -6,7 +6,7 @@ $db = new mysqli(db_info::URL, db_info::ID, db_info::PW, db_info::DB);
 
 # 비로그인 접근 처리
 if (!isset($_SESSION['login']['id'])) {
-    $_SESSION['login']['error'] = '비회원은 볼 수 없습니다.';
+    $_SESSION['login']['error'] = '로그인 후 글을 볼 수 있습니다.';
     header('Location: index.php');
     exit;
 }
