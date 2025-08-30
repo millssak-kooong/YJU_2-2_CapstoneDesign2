@@ -3,7 +3,7 @@ session_start();
 
 # 비로그인 접근 시 에러 처리
 if (!isset($_SESSION['login']['id'])) {
-    $_SESSION['login']['error'] = '죄송합니다. 회원 전용 서비스입니다.';
+    $_SESSION['login']['error'] = '로그인 후 글을 작성할 수 있습니다.';
     header('Location: index.php');
     exit;
 }
