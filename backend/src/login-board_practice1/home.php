@@ -4,7 +4,7 @@ session_start();
 
 // 비로그인 접근 에러 메시지 저장
 if (!isset($_SESSION['login']['id'])) {
-    $_SESSION['login']['error'] = '로그인 후 이용 부탁드립니다.';
+    $_SESSION['login']['error'] = '로그인 후 입장할 수 있습니다.';
     header('Location: index.php');
     exit;
 }
