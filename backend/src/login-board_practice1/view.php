@@ -15,7 +15,7 @@ if (!isset($_SESSION['login']['id'])) {
 $num = (int)$_GET['num']; // primary key라 예외 방지 처리 생략
 
 # 2. 조회수 증가 (준비문 사용)
-$stmt = $db->prepare("update post set view = view + 1 where num = ?");
+$stmt = $db->prepare("update post set view = view + 1, updated_at = updated_at where num = ?");
 $stmt->bind_param('i', $num); // ?의 개수/순서 = 바인딩 순서
 $stmt->execute();
 $stmt->close(); // 준비문 자원 해제
