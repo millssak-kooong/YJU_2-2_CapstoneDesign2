@@ -63,6 +63,14 @@ $stmt->close();
         <button type="submit" name="request" value="edit">수정</button>
         <button type="submit" name="request" value="delete">삭제</button>
     </form>
+
+    <?php // 검증 에러 메시지 출력: 작성자 불일치, 비밀번호 불일치
+    if (isset($_SESSION['verify']['error'])) {
+        echo "<p style='color:red'>{$_SESSION['verify']['error']}</p>";
+        unset($_SESSION['verify']['error']);
+    }
+    ?>
+    
     <hr>
     <p>글쓴이: <?= $post['name'] ?></p>
     <p>제목: <?= $post['title'] ?></p>
