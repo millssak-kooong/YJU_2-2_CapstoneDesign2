@@ -56,7 +56,8 @@ if (!password_verify($pw, $row['password'])) {
     }
 
 // 7. 로그인 성공, 로그인 상태 유지 위해 세션에 num, name, id 저장
-$_SESSION['login']['num'] = $row['num']; // 외래키로써 게시글 작성에 사용
+$_SESSION['login']['num'] = $row['num'];
+    // 참조(부모)키로써 외래키랑 join하여 게시글 작성, 검증에 사용
 $_SESSION['login']['name'] = $row['name'];
 $_SESSION['login']['id'] = $row['id'];
 $db_conn->close();
