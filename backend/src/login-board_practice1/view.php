@@ -56,8 +56,13 @@ $stmt->close();
     <!-- updated_at 값이 null이 아닐 때만 출력, ":, endif;": HTML이랑 섞어 쓸 때 중괄호 { } 대신 -->
     <?php if (!empty($post['updated_at'])) : ?><p>마지막 수정 일시: <?= $post['updated_at'] ?></p><?php endif; ?>
     <p>조회 수: <?= $post['view'] ?></p>
-    <button type="button" onclick="location.href='edit.php?num=<?= $num ?>'">수정</button>
-    <button type="button" onclick="location.href='delete.php?num=<?= $num ?>'">삭제</button>
+    <!-- 수정/삭제 버튼: verify.php로 글 번호와 요청 종류 전달
+         => verify.php에서 비밀번호 검증 후 edit.php 또는 delete.php로 이동 -->
+    <form action="verify.php" method="post">
+        <input type="hidden" name="post_num" value="<?= $num ?>">
+        <button type="submit" name="request" value="edit">수정</button>
+        <button type="submit" name="request" value="delete">삭제</button>
+    </form>
     <hr>
     <p>글쓴이: <?= $post['name'] ?></p>
     <p>제목: <?= $post['title'] ?></p>
