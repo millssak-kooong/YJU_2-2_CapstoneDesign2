@@ -29,7 +29,7 @@ if (isset($_SESSION['login']['id'])) {
             unset($_SESSION['register']['success']); // 플래시 메시지 패턴
         }
 
-        # 비로그인 접근 제한 메시지: 홈 페이지, 글 보기 페이지, 글 수정 페이지, 비밀 번호 검증 페이지
+        # 비로그인 접근 제한 메시지: 홈 페이지, 글 보기 페이지, 글 수정 페이지, 비밀 번호 검증 페이지, 글 수정 페이지
         if (isset($_SESSION['login']['error'])) {
             echo "<p style='color:red'>" . htmlspecialchars($_SESSION['login']['error']) . "</p>";
             unset($_SESSION['login']['error']); // 플래시 메시지 패턴
