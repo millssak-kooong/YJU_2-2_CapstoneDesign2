@@ -21,7 +21,7 @@ if (!isset($_SESSION['login']['id'])) {
 </head>
 <body>
     <h1>글 수정</h1>
-    <form action="edit_process.php" method="post">
+    <form action="edit_process.php?num=<?= $_GET['num'] ?>" method="post">
         <fieldset>
             <legend>게시글 양식</legend>
             <br>
