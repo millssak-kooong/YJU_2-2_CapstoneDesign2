@@ -29,9 +29,10 @@ if (!isset($_SESSION['login']['id'])) {
     }
     ?>
 
-    <form action="edit_process.php?num=<?= $_GET['num'] ?>" method="post">
+    <form action="edit_process.php?num=<?= $_POST['post_num'] ?>" method="post">
         <fieldset>
             <legend>게시글 양식</legend>
+            <input type="hidden" name="post_num" value="<?= $_POST['post_num'] ?>">
             <br>
             <label for="title">제목</label>
             <input type="text" id="title" name="title" required>
