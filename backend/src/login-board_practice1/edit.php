@@ -21,6 +21,14 @@ if (!isset($_SESSION['login']['id'])) {
 </head>
 <body>
     <h1>글 수정</h1>
+
+    <?php // 수정 처리 에러 표시: 조회 실패, 변경 사항 없음
+    if (isset($_SESSION['edit']['error'])) {
+        echo 'p style="color:red">' . htmlspecialchars($_SESSION['edit']['error']) . '</p>';
+        unset($_SESSION['edit']['error']);
+    }
+    ?>
+
     <form action="edit_process.php?num=<?= $_GET['num'] ?>" method="post">
         <fieldset>
             <legend>게시글 양식</legend>
