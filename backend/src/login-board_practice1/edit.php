@@ -24,7 +24,7 @@ if (!isset($_SESSION['login']['id'])) {
 
     <?php // 수정 처리 에러 표시: 조회 실패, 변경 사항 없음
     if (isset($_SESSION['edit']['error'])) {
-        echo 'p style="color:red">' . htmlspecialchars($_SESSION['edit']['error']) . '</p>';
+        echo '<p style="color:red">' . htmlspecialchars($_SESSION['edit']['error']) . '</p>';
         unset($_SESSION['edit']['error']);
     }
     ?>
