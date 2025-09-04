@@ -69,6 +69,11 @@ $stmt->close();
         echo "<p style='color:red'>{$_SESSION['verify']['error']}</p>";
         unset($_SESSION['verify']['error']);
     }
+    // 글 수정 완료 메시지 표시
+    if (isset($_SESSION['edit']['success'])) {
+        echo "<p style='color:darkgreen'>{$_SESSION['edit']['success']}</p>";
+        unset($_SESSION['edit']['success']);
+    }
     ?>
     
     <hr>
