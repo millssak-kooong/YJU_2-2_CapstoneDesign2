@@ -20,44 +20,31 @@ if (!isset($_SESSION['login']['id'])) {
                                     */
 
 # 1. 데이터 정규화 및 자료형 캐스팅
-$post_num = (int)($_GET['num']);
+$post_num = (int)($_POST['post_num']);
 $new_title = $_POST['title'];
 $new_content = $_POST['content'];
 
-# 2. 'Read' of CRUD
-$sql = 'SELECT title, content from post where num = ?';
+# 2. CR'U'D - 작성자 일치 그리고 값 변경 되었을 시
+$sql = 'UPDATE post
+        set title = ?, content = ?
+        where num = ?
+        and user_num = ?
+        and (not (title <=> ?) or not (content <=> ?))';
 $stmt = $db->prepare($sql);
-$stmt->bind_param('i', $post_num);
+$stmt->bind_param('ssiiss', $new_title, $new_content, $post_num, $_SESSION['login']['num'], $new_title, $new_content);
 $stmt->execute();
-$result = $stmt->get_result(); // 결과셋 객체
-$row = $result->fetch_assoc(); // 연관 배열
-$result->free();               // 결과 버퍼랑 메모리 정리
-$stmt->close();                // 준비문 리소스 해제
 
-    // 조회 실패
-    if (!$row) {
-        $db->close();
-        $_SESSION['edit']['error'] = '글을 찾을 수 없습니다.';
-        header("Location: edit.php?num=$post_num");
-        exit;
-    }
-
-    // 수정 사항 유무 검사
-    if ($row['title'] === $new_title && $row['content'] === $new_content) {
-        $db->close();
+    /* affected_row: 바뀐/삽입된/삭제된 행 수
+       0이면: (1) 글 없음/권한 없음 OR (2) 내용 동일
+       1이면: 쿼리 성공 */
+    if ($stmt->affected_rows === 0) {
         $_SESSION['edit']['error'] = '변경된 사항이 없습니다.';
         header("Location: edit.php?num=$post_num");
         exit;
     }
-
-# 3. 'Update' of CRUD
-$sql = 'UPDATE post set title = ?, content = ? where num = ?';
-$stmt = $db->prepare($sql);
-$stmt->bind_param('ssi', $new_title, $new_content, $post_num);
-$stmt->execute();
 $stmt->close();
 
-# 4. 리디렉션
+# 3. 리디렉션
 $_SESSION['edit']['success'] = '글을 수정하였습니다.';
 header("Location: view.php?num=$post_num");
 exit;
