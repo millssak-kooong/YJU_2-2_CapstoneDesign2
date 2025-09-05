@@ -11,7 +11,29 @@ if (!isset($_SESSION['login']['id'])) {
     exit;
 }
 
-# 1. 글 수정 폼 표시 및 제출 ?>
+# 원본 보여 주기 위한 C'R'UD
+// 1. 글 조회: 작성자 확인도 함께
+$sql = "SELECT title, content from post where num = ? and user_num = ?";
+$stmt = $db->prepare($sql);
+$stmt->bind_param('ii', $_GET['num'], $_SESSION['login']['num']);
+$stmt->execute();
+$row = $stmt->get_result()->fetch_assoc();
+    if (!$row) {
+        $_SESSION['edit']['error'] = '비정상적인 접근입니다. + 작성자가 일치하지 않습니다.';
+        header('Location: home.php');
+        exit;
+    }
+$stmt->close();
+
+// 2. 변수로 정규화
+$old_title = $row['title'];
+$old_content = $row['content'];
+
+// 3. 출력용 이스케이프 헬퍼
+function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'utf-8'); }
+
+
+# 글 수정 폼 표시 및 제출 ?>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -35,11 +57,11 @@ if (!isset($_SESSION['login']['id'])) {
             <input type="hidden" name="post_num" value="<?= $_GET['num'] ?>">
             <br>
             <label for="title">제목</label>
-            <input type="text" id="title" name="title" required>
+            <input type="text" id="title" name="title" required value="<?= e($old_title) ?>">
             <br>
             <br>
             <label for="content">내용</label>
-            <textarea id="content" name="content" required></textarea>
+            <textarea id="content" name="content" required><?= e($old_content) ?></textarea>
             <br>
             <br>
             <input type="submit" value="등록">
