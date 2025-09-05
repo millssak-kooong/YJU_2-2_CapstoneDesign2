@@ -32,6 +32,10 @@ function render_form(int $post_num, string $request, string $error = ''): void {
         }
         ?>
 
+        <!-- ※ POST 전송은 form으로밖에 못한다.
+             ※ 쿼리스트링 붙이면 GET, POST 동시 가능.
+
+                여기서 post 방식은 비밀 번호 틀릴 때만 사용되며 verify.php에서만 돈다. -->
         <form action="verify.php" method="post">
             <input type="hidden" name="post_num" value="<?= $_POST['post_num'] ?>">
             <input type="hidden" name="request" value="<?= $_POST['request'] ?>">
@@ -86,5 +90,6 @@ if (!password_verify($_POST['password'], $row['password'])) {
 }
 
 // 비밀 번호 일치 -> 요청한 곳으로 리디렉션
+    # ※ 쿼리스트링이 붙으면 무조건 GET 전송 -> 쿼리스트링 없으면 GET 불가
 header('Location: ' . $_POST['request'] . '.php?num=' . $_POST['post_num']);
 exit;
