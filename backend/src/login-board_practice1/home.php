@@ -57,6 +57,12 @@ if (!isset($_SESSION['login']['id'])) {
         unset($_SESSION['post']['error']);
     }
 
+    // 비정상적 접근 조치 메시지: 검증 거치지 않고 수정 페이지 접근 시
+    if (isset($_SESSION['edit']['error'])) {
+        echo "<p style='color:red'>" . htmlspecialchars($_SESSION['edit']['error']) . "</p>";
+        unset($_SESSION['edit']['error']);
+    }
+
 
     # ---------- 게시글 목록 (페이지네이션) ----------
     
