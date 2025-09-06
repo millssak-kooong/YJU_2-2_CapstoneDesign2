@@ -63,6 +63,12 @@ if (!isset($_SESSION['login']['id'])) {
         unset($_SESSION['edit']['error']);
     }
 
+    // 글 삭제 성공 메시지
+    if (isset($_SESSION['delete']['success'])) {
+        echo "<p style='color:darkgreen'>" . htmlspecialchars($_SESSION['delete']['success']) . "</p>";
+        unset($_SESSION['delete']['success']);
+    }
+
 
     # ---------- 게시글 목록 (페이지네이션) ----------
     
