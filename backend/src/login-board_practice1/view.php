@@ -74,6 +74,11 @@ $stmt->close();
         echo "<p style='color:darkgreen'>{$_SESSION['edit']['success']}</p>";
         unset($_SESSION['edit']['success']);
     }
+    // 글 삭제 실패 메시지
+    if (isset($_SESSION['delete']['error'])) {
+        echo "<p style='color:red'>" . $_SESSION['delete']['error'] . "</p>";
+        unset($_SESSION['delete']['error']);
+    }
     ?>
     
     <hr>
